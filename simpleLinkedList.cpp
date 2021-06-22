@@ -30,7 +30,7 @@ int main()
 
     describe_node(firts);
 
-    remove_val(firts, 40);
+    remove_val(firts, 30);
 
     describe_node(firts);
 
@@ -101,21 +101,20 @@ void add(Node *node, int value)
 void remove_val(Node *&node, int n)
 {
     cout << "Pedido de remoção do valor: " << n <<endl;
+
     Node *aux = node;
     Node *previus = node;
-
 
     //se for o primeiro, o head da list vira o next do primeiro.
     if (node->value == n)
     {
         cout << "\t Encontrado mudando " << node << " para " << aux->next << endl;
-        node = aux->next;
+
+        node = node->next;
+        delete(aux); // o adress onde estava o node
         return;
     }
-
-    // dai pra baixo preciso implementar
-
-
+    // remove um node que possui o valor n
     while (aux->next != NULL)
     {
         aux = aux->next;
@@ -124,6 +123,7 @@ void remove_val(Node *&node, int n)
         {
             cout << "\t Encontrado mudando " << previus->next << " para " << aux->next << endl;
             previus->next = aux->next;
+            delete(aux); // o adress onde estava o node 'aux'
             return;
         }
 
