@@ -9,31 +9,28 @@ struct Node
     struct Node *next;
 };
 
-
 // Prototypes
 void describe_node(Node *node);
 void add(Node *node, int value);
 bool have(Node *node, int n);
+void remove_val(Node *node, int n);
 
 // main
 int main()
 {
-
     //primeiro valor
     Node *firts = new Node;
     firts->value = 10;
     firts->next = NULL;
 
-
     // adiciona os valores
     add(firts, 20);
     add(firts, 30);
+    add(firts, 40);
 
-    // mostra a estrutura de dados
     describe_node(firts);
 
-    add(firts, 40);
-    add(firts, 50);
+    remove_val(firts, 10);
 
     describe_node(firts);
 
@@ -48,13 +45,12 @@ int main()
     }
     else
     {
-        cout << "n�o tem o numero '" << numeroProcurado <<"'\n";
+        cout << "não tem o numero '" << numeroProcurado <<"'\n";
     }
-
     return 0;
-
 }
 
+// mostra como está a estrutura de dados
 void describe_node(Node *node)
 {
     Node *aux = node;
@@ -68,9 +64,7 @@ void describe_node(Node *node)
 
     while (aux->next != NULL )
     {
-
         aux = aux->next;
-
         contador ++;
 
         cout << contador;
@@ -81,6 +75,7 @@ void describe_node(Node *node)
 
 }
 
+// adiciona um valor ao final da linked-list
 void add(Node *node, int value)
 {
     //crio o novo list
@@ -98,12 +93,40 @@ void add(Node *node, int value)
         aux = aux->next;
     }
     aux->next = tmp;
-
-
-
-
 }
 
+// remove um valor da linked list se esse existir
+void remove_val(Node *node, int n)
+{
+    Node *aux = node;
+    Node *previus = node;
+
+
+    //se for o primeiro, o head da list vira o next do primeiro.
+    if (node->value == n)
+    {
+        cout << "Encontrado mudando " << node << " para " << aux->next << endl;
+        node = aux->next;
+        return;
+    }
+
+    // dai pra baixo preciso implementar
+
+    aux = aux->next;
+
+    while (aux->next != NULL)
+    {
+        aux = aux->next;
+
+        if (aux->value == n)
+        {
+            previus = aux->next;
+        }
+
+        previus = aux;
+    }
+}
+// verifica se existe o valor n na linked-list
 bool have(Node *node, int n)
 {
     Node *aux = node;
@@ -115,7 +138,6 @@ bool have(Node *node, int n)
 
     while (aux->next != NULL)
     {
-
         aux = aux->next;
 
         if (aux->value == n)
@@ -124,9 +146,4 @@ bool have(Node *node, int n)
         }
     }
     return false;
-
-
 }
-
-
-
