@@ -13,7 +13,7 @@ struct Node
 void describe_node(Node *node);
 void add(Node *node, int value);
 bool have(Node *node, int n);
-void remove_val(Node *node, int n);
+void remove_val(Node *&node, int n);
 
 // main
 int main()
@@ -30,13 +30,14 @@ int main()
 
     describe_node(firts);
 
-    remove_val(firts, 10);
+    remove_val(firts, 40);
 
     describe_node(firts);
 
     cout << "======\n";
 
     // vejo se ha um numero na linked-list
+    /*
     int numeroProcurado = 20;
 
     if ( have(firts, numeroProcurado) )
@@ -47,6 +48,7 @@ int main()
     {
         cout << "não tem o numero '" << numeroProcurado <<"'\n";
     }
+    */
     return 0;
 }
 
@@ -96,8 +98,9 @@ void add(Node *node, int value)
 }
 
 // remove um valor da linked list se esse existir
-void remove_val(Node *node, int n)
+void remove_val(Node *&node, int n)
 {
+    cout << "Pedido de remoção do valor: " << n <<endl;
     Node *aux = node;
     Node *previus = node;
 
@@ -105,14 +108,13 @@ void remove_val(Node *node, int n)
     //se for o primeiro, o head da list vira o next do primeiro.
     if (node->value == n)
     {
-        cout << "Encontrado mudando " << node << " para " << aux->next << endl;
+        cout << "\t Encontrado mudando " << node << " para " << aux->next << endl;
         node = aux->next;
         return;
     }
 
     // dai pra baixo preciso implementar
 
-    aux = aux->next;
 
     while (aux->next != NULL)
     {
@@ -120,7 +122,9 @@ void remove_val(Node *node, int n)
 
         if (aux->value == n)
         {
-            previus = aux->next;
+            cout << "\t Encontrado mudando " << previus->next << " para " << aux->next << endl;
+            previus->next = aux->next;
+            return;
         }
 
         previus = aux;
