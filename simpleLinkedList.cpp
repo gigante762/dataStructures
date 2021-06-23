@@ -11,7 +11,8 @@ struct Node
 
 // Prototypes
 void describe_node(Node *node);
-void add(Node *node, int value);
+void add_tail(Node *node, int value);
+void add_head(Node *&node, int value);
 bool have(Node *node, int n);
 void remove_val(Node *&node, int n);
 
@@ -19,27 +20,26 @@ void remove_val(Node *&node, int n);
 int main()
 {
     //primeiro valor
-    Node *firts = new Node;
-    firts->value = 10;
-    firts->next = NULL;
+    Node *first = new Node;
+    first->value = 10;
+    first->next = NULL;
 
     // adiciona os valores
-    add(firts, 20);
-    add(firts, 30);
-    add(firts, 40);
+    add_head(first, 20);
+    add_head(first, 30);
+    add_head(first, 40);
 
-    describe_node(firts);
+    describe_node(first);
 
-    remove_val(firts, 30);
+    remove_val(first, 30);
 
-    describe_node(firts);
+    describe_node(first);
 
     cout << "======\n";
 
     // vejo se ha um numero na linked-list
     /*
     int numeroProcurado = 20;
-
     if ( have(firts, numeroProcurado) )
     {
         cout << "Tem o numero '" << numeroProcurado <<"'\n";
@@ -55,20 +55,10 @@ int main()
 // mostra como está a estrutura de dados
 void describe_node(Node *node)
 {
-    Node *aux = node;
-
     int contador = 1;
 
-    cout <<contador;
-    cout << " Adress: " << aux << endl;
-    cout << "value: " << aux->value << endl;
-    cout << "Next: " << aux->next << "\n\n";
-
-    while (aux->next != NULL )
+    for(Node *aux = node; aux != NULL ; aux = aux->next, contador++)
     {
-        aux = aux->next;
-        contador ++;
-
         cout << contador;
         cout << " Adress: " << aux << endl;
         cout << "value: " << aux->value << endl;
@@ -78,12 +68,12 @@ void describe_node(Node *node)
 }
 
 // adiciona um valor ao final da linked-list
-void add(Node *node, int value)
+void add_tail(Node *node, int value)
 {
     //crio o novo list
-    Node *tmp = new Node;
-    tmp->value = value;
-    tmp->next = NULL;
+    Node *newNode = new Node;
+    newNode->value = value;
+    newNode->next = NULL;
 
     //node auxiliar
     Node *aux = new Node;
@@ -94,9 +84,19 @@ void add(Node *node, int value)
     {
         aux = aux->next;
     }
-    aux->next = tmp;
+    aux->next = newNode;
 }
+// adiciona um valor ao inicio da linked-list
+void add_head(Node *&node, int value)
+{
+    //crio o novo list
+    Node *newNode = new Node;
+    newNode->value = value;
+    newNode->next = node;
 
+    //node auxiliar
+    node = newNode;
+}
 // remove um valor da linked list se esse existir
 void remove_val(Node *&node, int n)
 {
