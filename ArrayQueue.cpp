@@ -94,7 +94,7 @@ public:
             delete[] pauxquee;
         }
 
-        cout<< "\tTem vaga, pushicionando o valor " << n << "\n";
+        cout<< "\tTem vaga, adicionando o valor " << n << "\n";
         queue[ocupations] = n;
         ocupations++;
     }
