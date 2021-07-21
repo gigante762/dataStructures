@@ -14,11 +14,6 @@ struct Node{
     struct Node *left;
 };
 
-void print(Node *node)
-{
-    cout << node->left->value <<" <- "<<node->value << " -> " << node->right->value;
-}
-
 Node* newNode(int value = 0)
 {
     Node *new_node = new Node;
@@ -29,43 +24,144 @@ Node* newNode(int value = 0)
     return new_node;
 }
 
+
+void insert(Node*& node, int val)
+{
+
+    if (node == NULL)
+    {
+        node = newNode(val);
+        return;
+    }
+
+    if (val < node->value)
+    {
+        insert(node->left,val);
+    }
+    else if (val > node->value)
+    {
+        insert(node->right,val);
+    }
+}
+
+
+void describe(Node* node)
+{
+    if (node->left != NULL)
+    {
+        describe(node->left);
+    }
+
+    cout << node->value << endl;
+
+    if (node->right != NULL)
+    {
+        describe(node->right);
+    }
+}
+
+/* Must be implemented */
+void delete_node(Node* node)
+{
+    if (node->left != NULL)
+    {
+        delete_node(node->left);
+    }
+
+    if (node->right != NULL)
+    {
+        delete_node(node->right);
+    }
+
+    delete node;
+
+}
+
+bool have(Node* node, int val)
+{
+    if (node->value == val)
+        return true;
+
+    if (val < node->value)
+    {
+        if ( node->left != NULL)
+            return have(node->left, val);
+        return false;
+    }
+    else if (val > node->value)
+    {
+        if ( node->right != NULL)
+            return have(node->right, val);
+        return false;
+    }
+
+    return false;
+
+}
+
+bool countStepsToFind(Node* node, int val,int* counterSteps)
+{
+    *counterSteps += 1;
+   
+
+    if (node->value == val)
+        return true;
+
+    if (val < node->value)
+    {
+        if ( node->left != NULL)
+            return countStepsToFind(node->left, val, counterSteps);
+        return false;
+    }
+    else if (val > node->value)
+    {
+        if ( node->right != NULL)
+            return countStepsToFind(node->right, val, counterSteps);
+        return false;
+    }
+
+    return false;
+
+}
+
 int main()
 {
 
-    /*
-    Node *root = new Node;
-    root->value = 4;
-    root->left = NULL;
-    root->right = NULL;
+    Node *tree = newNode(0);
 
-    Node *n1 = new Node;
-    n1->value = 2;
-    n1->left = NULL;
-    n1->right = NULL;
+    insert(tree,4);
+    insert(tree,2);
+    insert(tree,6);
+    insert(tree,1);
+    insert(tree,5);
+    insert(tree,3);
+    insert(tree,7);
 
-    Node *n2 = new Node;
-    n2->value = 6;
-    n2->left = NULL;
-    n2->right = NULL;
+    /* insert(tree,1);
+    insert(tree,2);
+    insert(tree,3);
+    insert(tree,4);
+    insert(tree,5);
+    insert(tree,6);
+    insert(tree,7);
+ */
+    //describe(tree);
 
-    // plug the nodes
+    //Conta quantos passos foram necessários para encontrar o número
+    int counter = 0;
+    int* pc = &counter;
 
-    root->left = n1;
-    root->right = n2;
-    */
+    countStepsToFind(tree,7,pc);
+    cout << counter << endl;
 
-    Node *root = newNode(4);
-    root->left = newNode(2);
-    root->right = newNode(6);
-
-    root->left->left = newNode(1);
-    root->left->right = newNode(3);
-
-    root->right->left = newNode(5);
-    root->right->right = newNode(7);
+    
 
 
-    print(root);
+   /*  cout << tree->value << endl;
+    cout << tree->left->value << endl;
+    cout << tree->right->value << endl; */
+
+
   
     // must free all the memory!!!
 
