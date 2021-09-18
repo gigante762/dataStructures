@@ -76,8 +76,7 @@ void add_tail(Node *node, int value)
     newNode->next = NULL;
 
     //node auxiliar
-    Node *aux = new Node;
-    aux = node;
+    Node *aux = node;
 
     //link
     while (aux->next != NULL)

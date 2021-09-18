@@ -10,8 +10,8 @@ using namespace std;
 
 struct Node{
     int value;
-    struct Node *right;
-    struct Node *left;
+    struct Node *right = NULL;
+    struct Node *left =NULL;
 };
 
 Node* newNode(int value = 0)
@@ -48,16 +48,13 @@ void insert(Node*& node, int val)
 void describe(Node* node)
 {
     if (node->left != NULL)
-    {
         describe(node->left);
-    }
-
-    cout << node->value << endl;
 
     if (node->right != NULL)
-    {
         describe(node->right);
-    }
+    
+    cout << node->value << endl;
+
 }
 
 /* Must be implemented */
