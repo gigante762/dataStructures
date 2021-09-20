@@ -39,7 +39,6 @@ int main()
     insert(lo,7);
     insert(lo,2);
     insert(lo,6);
-    insert(lo,6);
 
 
     /* for (int i = 7; i < 100; i++)
@@ -49,68 +48,39 @@ int main()
     
     show(lo);
 
-    remove(lo,2);
     remove(lo,6);
-    //remove(lo,10);
     show(lo);
+    remove(lo,6);
+    show(lo);
+    //remove(lo,10);
 
     return 0;
 }
 
 void insert(OrdList &list, ItemType n)
 {
-    if (list.head == NULL)
+    if (list.head == NULL || n <= list.head->data)
     {
         Node *newnode = new Node;
         newnode->data = n;
-        list.head = newnode;
-
-        return;
-    }
-
-    if (n <= list.head->data)
-    {
-        Node *newnode = new Node;
-        newnode->data  = n;
         newnode->next = list.head;
-
         list.head = newnode;
-
-        return;
     }
-
-    Node *aux, *prev;
-
-    prev = list.head;
-    aux = list.head;
-
-
-    while (aux->data < n)
+    else
     {
-        aux = aux->next;
+        Node *aux;
+        aux = list.head;
 
-        if (aux == NULL)
+        while (aux->next != NULL &&  n > aux->next->data)
         {
-            Node *newnode = new Node;
-            newnode->data = n;
-            prev->next = newnode;
-
-            return;
+            aux = aux->next;
         }
 
-        if ( n > aux->data )
-        {
-            prev = prev->next;
-        }
-        else
-        {
-            Node *newnode = new Node;
-            newnode->data = n;
-            newnode->next = aux;
-            prev->next = newnode;
+        Node *newnode = new Node;
+        newnode->data = n;
+        newnode->next = aux->next;
+        aux->next = newnode;
 
-            return;
-        }
     }
 }
 
@@ -130,27 +100,23 @@ void remove(OrdList  &list, ItemType n)
         return;
     }
 
-    Node *prev = aux;
 
-    while(aux != NULL )
+    while (aux->next != NULL && aux->next->data != n && aux->next->data < n)
     {
-        if (n > aux->data)
-            aux = aux->next;
-        
-        if ( aux->data == n)
-        {
-            Node *tmp = prev->next;
-            prev->next = aux->next;
-            delete tmp;
-            return;
-        }
-        else if(n < aux->data)
-        {
-            return;
-        }
-
-        prev = prev->next;
+        aux = aux->next;
     }
+
+    if (aux->next == NULL)
+        return ;
+
+    if(aux->next->data == n)
+    {
+        Node *tmp = aux->next;
+        aux->next = aux->next->next;
+
+        delete tmp;
+    }
+
 }
 
 bool isEmpty(OrdList list)

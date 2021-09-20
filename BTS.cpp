@@ -2,6 +2,9 @@
 using namespace std;
 
 
+typedef int ItemType;
+
+
 /* Exemple Tree looks like
           (4)
      (2)       (6)
@@ -10,11 +13,13 @@ using namespace std;
 
 struct Node{
     int value;
-    struct Node *right = NULL;
-    struct Node *left =NULL;
+    Node *right = NULL, *left = NULL;
 };
 
-Node* newNode(int value = 0)
+void deleteNode(Node *& node);
+void removeNode(Node*& node, ItemType n);
+
+Node* newNode(ItemType value = 0)
 {
     Node *new_node = new Node;
     new_node->value = value;
@@ -25,16 +30,14 @@ Node* newNode(int value = 0)
 }
 
 
-void insert(Node*& node, int val)
+void insert(Node*& node, ItemType val)
 {
 
     if (node == NULL)
     {
         node = newNode(val);
-        return;
     }
-
-    if (val < node->value)
+    else if (val < node->value)
     {
         insert(node->left,val);
     }
@@ -45,33 +48,90 @@ void insert(Node*& node, int val)
 }
 
 
-void describe(Node* node)
+void describeInOrder(Node* node)
 {
     if (node->left != NULL)
-        describe(node->left);
+        describeInOrder(node->left);
+
+    cout << node->value << " ";
 
     if (node->right != NULL)
-        describe(node->right);
-    
-    cout << node->value << endl;
+        describeInOrder(node->right);
+
+}
+void describePreOrder(Node* node)
+{
+    cout << node->value << " ";
+
+    if (node->left != NULL)
+        describePreOrder(node->left);
+
+    if (node->right != NULL)
+        describePreOrder(node->right);
 
 }
 
-/* Must be implemented */
-void delete_node(Node* node)
+void removeNode(Node*& node, ItemType n)
 {
-    if (node->left != NULL)
+    if (node->value == n)
     {
-        delete_node(node->left);
+       deleteNode(node);
     }
-
-    if (node->right != NULL)
+    else if (n > node->value  )
     {
-        delete_node(node->right);
+        removeNode(node->right, n);
     }
+    else if ( n < node->value )
+    {
+        removeNode(node->left, n);
+    }
+}
 
-    delete node;
+void getSucessor(Node* node, ItemType &n)
+{
+    node = node->right;
 
+    while (node->left != NULL)
+    {
+        node = node->left;
+    }
+    
+    n = node->value;
+}
+
+void deleteNode(Node *& node)
+{
+    Node* tmp = node;
+    
+    /* Caso um dos dois seja null, um filho apenas ou nenhum */
+    if (node->left == NULL)
+    {
+        node = node->right;
+        delete tmp;
+    }
+    else if (node->right == NULL)
+    {
+        node = node->left;
+        delete tmp;
+    }
+    else
+    {
+        ItemType antV;
+        getSucessor(node,antV); // recebe o valor em antV, modificado por referência
+        node->value = antV;
+        removeNode(node->right, antV);
+    }
+}
+
+/* have bug */
+void destroyNode(Node *&node)
+{
+    if (node != NULL)
+    {
+        destroyNode(node->left);
+        destroyNode(node->right);
+        delete node;
+    }
 }
 
 bool have(Node* node, int val)
@@ -124,15 +184,27 @@ bool countStepsToFind(Node* node, int val,int* counterSteps)
 int main()
 {
 
-    Node *tree = newNode(0);
+    Node *tree = NULL;
 
+    /* Exemple Tree looks like
+            (4)
+        (2)       (6)
+    (1)   (3) (5)   (7)
+    */
     insert(tree,4);
     insert(tree,2);
     insert(tree,6);
+
     insert(tree,1);
     insert(tree,5);
     insert(tree,3);
     insert(tree,7);
+    describePreOrder(tree);
+    cout << endl;
+    removeNode(tree,4);
+    describePreOrder(tree);
+
+
 
     /* insert(tree,1);
     insert(tree,2);
@@ -141,15 +213,14 @@ int main()
     insert(tree,5);
     insert(tree,6);
     insert(tree,7);
- */
-    //describe(tree);
+    describePreOrder(tree); */
 
     //Conta quantos passos foram necessários para encontrar o número
-    int counter = 0;
+   /*  int counter = 0;
     int* pc = &counter;
 
     countStepsToFind(tree,7,pc);
-    cout << counter << endl;
+    cout << endl << counter << endl; */
 
     
 
@@ -164,4 +235,3 @@ int main()
 
     return 0;
 }
-
