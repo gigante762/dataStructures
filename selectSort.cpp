@@ -39,8 +39,6 @@ void selectBidirect(int array[], int tam)
     int start = 0;
     int end = tam;
 
-    
-
     while(end-start > 2)
     {
         //printf("end-start: %d-%d => %d\n", end,start,(end-start));
@@ -100,7 +98,7 @@ int main()
    int v[] = {5,3,7,6,1,2,0,4,8,9};
 
    describe(v,10);
-   selectSort(v,10);
+   selectBidirect(v,10);
    describe(v,10);
 
 

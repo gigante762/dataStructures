@@ -158,9 +158,9 @@ void destroyNode(Node *&node)
 {
     if (node != NULL)
     {
-        /* deleteNode(node->left);
-        deleteNode(node->right);
-        deleteNode(node); */
+        destroyNode(node->left);
+        destroyNode(node->right);
+        delete node;
         //node = NULL;
     }
 }
@@ -263,10 +263,22 @@ int main()
         junto com o tamanho dos depenada valores a serem inseridos, que mais vira um lista linkada.
         Sendo assim não é viável usar o processo de inserção recursiva.
     */
-    /* for (int i = 1; i <= 10; i++)
+    for (int i = 1; i <=20000; i++)
     {
-        insertNomRecursive(tree,i*2);
-    } */
+        insert(tree,i*2);
+    }
+
+    int x;
+    cout<< "continue...";
+    cin >> x ;
+
+    for (int i = 1; i <=20000; i++)
+    {
+        removeNode(tree,i*2);
+    }
+
+    cout<< "continue...";
+    cin >> x ;
 
     /* describePreOrder(tree);
     cout << endl ;
