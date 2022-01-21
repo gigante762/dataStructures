@@ -47,7 +47,9 @@ ItemType pop(Stack &p)
         return false;
     }
 }
-
+/**
+ * Função que exibe na tela uma representação da pilha.
+ */
 void describe(Stack p)
 {
     if (isEmpty(p))
@@ -67,11 +69,15 @@ void describe(Stack p)
 int main()
 {
 
+    //criação da pilha com o nome p
     Stack p;
+
+    //exibe a pilha, que se encontra vazia.
     describe(p);
 
-    ItemType c;
 
+    /* O processo abaixo lê caracteres até que seja diferente de '\n' ou Enter */
+    ItemType c;
     cin.get(c);
 
     while(c != '\n')
@@ -80,11 +86,16 @@ int main()
         cin.get(c);
     }
     
-    
+    /* O processo abaixo desempilha os valores empilhados acima, e caso o número
+    de caracteres empilhados seja maior que o tamanho da pilha será exibida uma mensagem
+    informando que a pilha está cheia. */
+
     while(!isEmpty(p))
     {
         cout << pop(p);;
     }
+
+
 
     
 

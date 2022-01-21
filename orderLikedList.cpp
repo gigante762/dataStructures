@@ -1,6 +1,11 @@
 #include <iostream>
 using namespace std;
 
+/* 
+    Aplicação de lista encadeada em uma lista ordenada de valores;
+    Autor: Kevin R.
+ */
+
 typedef float ItemType;
 
 struct Node {
@@ -25,34 +30,18 @@ int main()
 
     OrdList lo;
 
-    /* int x;
-    cin >> x;
-
-    while (x != -1)
-    {
-        insert(lo,x);
-        cin >> x;
-    } */
-
     insert(lo,3);
-    insert(lo,5);
+    insert(lo,1);
     insert(lo,7);
     insert(lo,2);
-    insert(lo,6);
-
-
-    /* for (int i = 7; i < 100; i++)
-    {
-        insert(lo,i);
-    } */
-    
+    insert(lo,6);    
     show(lo);
 
     remove(lo,6);
     show(lo);
-    remove(lo,6);
+
+    remove(lo,2);
     show(lo);
-    //remove(lo,10);
 
     return 0;
 }

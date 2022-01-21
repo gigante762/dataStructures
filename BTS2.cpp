@@ -12,7 +12,7 @@ typedef int ItemType;
 */
 
 struct Node{
-    int value;
+    int v;
     Node *right = NULL, *left = NULL;
 };
 
@@ -26,51 +26,90 @@ void getSucessor(Node* node, ItemType &n);
 int countStepsToFind(Node* node, int val, int &counterSteps);
 int countStepsToFind(Node* node, int val);
 
-Node* newNode(ItemType value = 0)
+bool isFull(Tree* tree)
 {
-    Node *new_node = new Node;
-    new_node->value = value;
-
-    return new_node;
+    try
+    {
+        Node* newnode = new Node;
+        delete newnode;
+        return false;
+    }
+    catch(std::bad_alloc e)
+    {
+        cout << "Memoria cheia" << endl;
+        return true;
+    }
+    
+}
+bool isFull(Node* node)
+{
+    try
+    {
+        Node* newnode = new Node;
+        delete newnode;
+        return false;
+    }
+    catch(std::bad_alloc e)
+    {
+        cout << "Memoria cheia" << endl;
+        return true;
+    }
+    
 }
 
-void insert(Node*& node, ItemType val)
+/* Chamada de insert pela tree passando o node */
+void insertNode(Node*& n, ItemType v)
 {
-    if (node == NULL)
+    if (n == NULL)
     {
-        node = newNode(val);
+        if (!isFull(n))
+        {
+            Node* newnode = new Node;
+            newnode->v = v;
+            n = newnode;
+        }
     }
-    else if (val < node->value)
+    else if (v < n->v)
     {
-        insert(node->left,val);
+        insertNode(n->left,v);
     }
-    else if (val > node->value)
+    else if (v > n->v)
     {
-        insert(node->right,val);
+        insertNode(n->right,v);
     }
+}
+
+/* Chamada de insert pelo usuário passando a tree */
+void insert(Tree*& tree, ItemType v)
+{
+   insertNode(tree->root, v);
 }
 
 /* Without recursion */
-void insertNomRecursive(Node*& node, ItemType val)
+void insertNomRecursive(Tree*& tree, ItemType v)
 {
-    Node *current = node;
+    Node *current = tree->root;
 
     // just for the first call
     if( current == NULL ){
-        node  = newNode(val);
+        tree->root  = new Node;
+        tree->root->v = v;
         return ;
     }
 
     while(current != NULL){
-        if(val < current->value){
+        if(v < current->v){
             if(current->left == NULL){
-                current->left = newNode(val);
+                current->left = new Node;
+                current->left->v = v;
+
                 return;
             }
             current = current->left;
         } else {
             if(current->right == NULL){
-                current->right = newNode(val);
+                current->right = new Node;
+                current->right->v = v;
                 return;
             } 
             current = current->right;
@@ -78,20 +117,23 @@ void insertNomRecursive(Node*& node, ItemType val)
     }
 }
 
+/* l, n , r */
 void describeInOrder(Node* node)
 {
     if (node->left != NULL)
         describeInOrder(node->left);
 
-    cout << node->value << " ";
+    cout << node->v << " ";
 
     if (node->right != NULL)
         describeInOrder(node->right);
 
 }
+
+/* n, l , r */
 void describePreOrder(Node* node)
 {
-    cout << node->value << " ";
+    cout << node->v << " ";
 
     if (node->left != NULL)
         describePreOrder(node->left);
@@ -101,20 +143,27 @@ void describePreOrder(Node* node)
 
 }
 
+/* Chamada da tree */
 void removeNode(Node*& node, ItemType n)
 {
-    if (node->value == n)
+    if (node->v == n)
     {
        deleteNode(node);
     }
-    else if (n > node->value  )
+    else if (n > node->v  )
     {
         removeNode(node->right, n);
     }
-    else if ( n < node->value )
+    else if ( n < node->v )
     {
         removeNode(node->left, n);
     }
+}
+
+/* Chamada do usuário */
+void removeNode(Tree*& tree, ItemType n)
+{
+    removeNode(tree->root,n);
 }
 
 void getSucessor(Node* node, ItemType &n)
@@ -126,7 +175,7 @@ void getSucessor(Node* node, ItemType &n)
         node = node->left;
     }
     
-    n = node->value;
+    n = node->v;
 }
 
 void deleteNode(Node *& node)
@@ -147,8 +196,8 @@ void deleteNode(Node *& node)
     else
     {
         ItemType antV;
-        getSucessor(node,antV); // recebe o valor em antV, modificado por referência
-        node->value = antV;
+        getSucessor(node, antV); // recebe o valor em antV, modificado por referência
+        node->v = antV;
         removeNode(node->right, antV);
     }
 }
@@ -167,16 +216,16 @@ void destroyNode(Node *&node)
 
 bool have(Node* node, int val)
 {
-    if (node->value == val)
+    if (node->v == val)
         return true;
 
-    if (val < node->value)
+    if (val < node->v)
     {
         if ( node->left != NULL)
             return have(node->left, val);
         return false;
     }
-    else if (val > node->value)
+    else if (val > node->v)
     {
         if ( node->right != NULL)
             return have(node->right, val);
@@ -191,16 +240,16 @@ int countStepsToFind(Node* node, int val)
 {
     int counterSteps = 1;
 
-    if (node->value == val)
+    if (node->v == val)
         return counterSteps;
 
-    if (val < node->value)
+    if (val < node->v)
     {
         if ( node->left != NULL)
             return countStepsToFind(node->left, val, counterSteps);
         return counterSteps;
     }
-    else if (val > node->value)
+    else if (val > node->v)
     {
         if ( node->right != NULL)
             return countStepsToFind(node->right, val, counterSteps);
@@ -214,18 +263,17 @@ int countStepsToFind(Node* node, int val)
 int countStepsToFind(Node* node, int val, int &counterSteps)
 {
     counterSteps += 1;
-   
 
-    if (node->value == val)
+    if (node->v == val)
         return counterSteps;
 
-    if (val < node->value)
+    if (val < node->v)
     {
         if ( node->left != NULL)
             return countStepsToFind(node->left, val, counterSteps);
         return counterSteps;
     }
-    else if (val > node->value)
+    else if (val > node->v)
     {
         if ( node->right != NULL)
             return countStepsToFind(node->right, val, counterSteps);
@@ -239,74 +287,27 @@ int countStepsToFind(Node* node, int val, int &counterSteps)
 int main()
 {
 
-    Node* tree = NULL;
+    Tree* tree = new Tree;
+
 
     /* Exemple Tree looks like
             (4)
         (2)       (6)
     (1)   (3) (5)   (7)
     */
-    /* insertNomRecursive(tree,4);
-    insertNomRecursive(tree,2);
-    insertNomRecursive(tree,6);
 
-    insertNomRecursive(tree,1);
-    insertNomRecursive(tree,5);
-    insertNomRecursive(tree,3);
-    insertNomRecursive(tree,7); */
-
-
-    /*  Recursion vs non-recursion insert */
-    /* insertNomRecursive é melhor porque não criar chamadas na stack ao inserir.
-        no código abaixo quando chega para inserir o 10 a stack está com 9 processos de inserção
-        recursiva na stack. Assim a stack de itens a serem inseridos nesse caso fica crescendo junto
-        junto com o tamanho dos depenada valores a serem inseridos, que mais vira um lista linkada.
-        Sendo assim não é viável usar o processo de inserção recursiva.
-    */
-    for (int i = 1; i <=20000; i++)
-    {
-        insert(tree,i*2);
-    }
-
-    int x;
-    cout<< "continue...";
-    cin >> x ;
-
-    for (int i = 1; i <=20000; i++)
-    {
-        removeNode(tree,i*2);
-    }
-
-    cout<< "continue...";
-    cin >> x ;
-
-    /* describePreOrder(tree);
-    cout << endl ;
-    //destroyNode(tree);
-    //removeNode(tree,4);
-    //removeNode(tree,2);
-    describePreOrder(tree);
-    cout << endl ;
-    
-    insertNomRecursive(tree,7);
- */
-    
-
-
-    /* insert(tree,1);
-    insert(tree,2);
-    insert(tree,3);
     insert(tree,4);
-    insert(tree,5);
+    insert(tree,2);
     insert(tree,6);
+
+    insert(tree,1);
+    insert(tree,5);
+
+    insert(tree,3);
     insert(tree,7);
-    describePreOrder(tree); */
 
-    //Conta quantos passos foram necessários para encontrar o número
-    //cout << endl << countStepsToFind(tree,14) << endl;
+    describePreOrder(tree->root);
 
-  
-    // must free all the memory!!!
 
     return 0;
 }

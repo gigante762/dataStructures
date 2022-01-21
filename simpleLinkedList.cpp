@@ -9,6 +9,10 @@ struct Node
     struct Node *next;
 };
 
+struct LinkedList{
+    Node *root = NULL;
+};
+
 // Prototypes
 void describe_node(Node *node);
 void add_tail(Node *node, int value);

@@ -1,7 +1,6 @@
 #include <iostream>
 using namespace std;
 
-
 typedef char ItemType;
 
 struct Node{
@@ -9,13 +8,16 @@ struct Node{
     Node* next = NULL;
 };
 
+struct Stack{
+    Node* node = NULL;
+};
 
-bool isEmpty(Node *p)
+bool isEmpty(Stack *p)
 {
-    return (p == NULL);
+    return (p->node == NULL);
 }
 
-bool isFull(Node *p)
+bool isFull(Stack *p)
 {
     try
     {
@@ -30,16 +32,16 @@ bool isFull(Node *p)
     
 }
 
-void push(Node* &p, ItemType n)
+void push(Stack* &p, ItemType n)
 {
     if(!isFull(p))
     {
         Node *newnode = new Node;
 
         newnode->v = n;
-        newnode->next = p;
+        newnode->next = p->node;
 
-        p = newnode;
+        p->node = newnode;
     }
     else
     {
@@ -49,14 +51,14 @@ void push(Node* &p, ItemType n)
 
 }
 
-ItemType pop(Node* &p)
+ItemType pop(Stack* &p)
 {
     if(!isEmpty(p))
     {
 
-        Node *tmpnode  = p;
+        Node *tmpnode  = p->node;
         ItemType tmp = tmpnode->v;
-        p = p->next;
+        p->node = p->node->next;
         delete tmpnode;
 
         return tmp;
@@ -70,31 +72,49 @@ ItemType pop(Node* &p)
 
 }
 
-void describe(Node *p)
+/**
+ * Função que exibe na tela uma representação da pilha.
+ */
+void describe(Stack *p)
 {
-    if (p == NULL)
-    {
-        cout << "Stack Vazia" << endl;
-        return;
-    }
+    Node* aux = p->node;
 
-    cout << "Stack: " ;
-    while(p != NULL)
+    if (aux == NULL)
     {
-        cout << p->v;
-
-        p = p->next;
+        cout << "Stack: Vazia" << endl;
     }
-   cout << endl;
+    else
+    {
+        cout << "Stack: " ;
+
+        for(; aux != NULL; aux = aux->next)
+        {
+            cout << aux->v << " ";
+        }
+        
+        cout << endl;
+    }
+}
+
+/* Retorna a quantidade de itens na stack */
+int stackLenght(Stack* p)
+{
+    int tam = 0;
+
+    for(Node *aux = p->node; aux != NULL; aux = aux->next)
+        tam++;
+
+    return tam;
 }
 
 int main()
 {
-
-    Node *stack = NULL;
-
+    
+    //criação da pilha com o nome stack
+    Stack *stack = new Stack;
+    
+    /* O processo abaixo lê caracteres até que seja diferente de '\n' ou Enter */
     ItemType c;
-
     cin.get(c);
 
     while(c != '\n')
@@ -103,13 +123,16 @@ int main()
         cin.get(c);
     }
     
-    
+    /* O processo abaixo desempilha os valores empilhados acima, e caso o número
+    de caracteres empilhados seja maior que o tamanho da pilha será exibida uma mensagem
+    informando que a pilha está cheia. */
+   
+    describe(stack);
     while(!isEmpty(stack))
     {
         cout << pop(stack);
     }
-
     
-
+    delete stack;
     return 0;
 }
