@@ -1,6 +1,8 @@
 #include <iostream>
 using namespace std;
 
+#define OS 'windows' // windows , linux
+
 /* 
     Lista duplamente encadeada circular inspirada nos operações em Js.
     Pop, Push, Shift and Unshift Array Methods in JavaScript
@@ -10,6 +12,26 @@ using namespace std;
     shift(): Remove an item from the beginning of an array.
 
     Autor: Kevin R.
+*/
+
+/* 
+
+    Check list de desenvolvimento. Em ordem de prioridade.
+ 
+    ---- Operações da lista ----
+    Inserir valores na lista
+    Inserir mais de uma valor na lista, 1 2 3 ... 
+    Buscar um valor na list -> encontrar;
+    Buscar um valor na list -> retornar;
+        Atualizar um valor da lista
+    Remover um valor da lista
+    Remover todos os valores da lista
+    --------
+
+    ----- Projeto ----- 
+    
+    ---------
+
 */
 
 typedef char ItemType;
@@ -251,13 +273,14 @@ void insertBefore(ListaDE*& l, NodeD* n, ItemType v)
 
 int main()
 {
-    ListaDE* listaDE = new ListaDE;
+    ListaDEC* listaDEC = new ListaDEC;
+    
 
     //preenche de A - Z
     for (short int i = 'A'; i <= 'Z'; i++)
         push(listaDE, (char) i);
 
-    describeFtoB(listaDE); cout << endl;
+    /* describeFtoB(listaDE); cout << endl;
 
     /* procurar o G e inseri o 7 depois do G */
     if (NodeD* found = findValue(listaDE, 'G'))
