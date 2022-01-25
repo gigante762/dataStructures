@@ -19,11 +19,13 @@ using namespace std;
     Check list de desenvolvimento. Em ordem de prioridade.
  
     ---- Operações da lista ----
-    Inserir valores na lista
-    Inserir mais de uma valor na lista, 1 2 3 ... 
-    Buscar um valor na list -> encontrar;
-    Buscar um valor na list -> retornar;
-        Atualizar um valor da lista
+    Inserir valores na lista ok
+    Inserir mais de uma valor na lista, 1 2 3 ... ok
+    
+    Buscar um valor na list -> encontrar; ok
+    Buscar um valor na list -> retornar; ok
+        Atualizar um valor da lista ok
+        
     Remover um valor da lista
     Remover todos os valores da lista
     --------
@@ -51,29 +53,54 @@ struct ListaDEC{
 
 
 /* Anda mostrando os valores do front pro back */
+/*
 void describeFtoB(ListaDE* l){
     cout << "Lista FtoB: ";
     for (NodeD* aux = l->front; aux != NULL; aux = aux->next)
         cout << aux->v << " ";
     cout << endl;
-}
+}/*
 
 /* Anda mostrando os valores do back pro front */
+/* 
 void describeBtoF(ListaDE* l){
     cout << "Lista BtoF: ";
     for (NodeD* aux = l->back; aux != NULL; aux = aux->prev)
         cout << aux->v << " ";
     cout << endl;
 }
+*/
+
+
+/*Mostra todos os valores partindo de l->first*/
+void describeAll(ListaDEC* l)
+{
+    
+    if(l->first == NULL)
+    {
+        cout << "Lista vazia\n";
+        return;
+    }
+    
+    NodeD* aux = l->first;
+    
+    do{
+         cout << aux->v << " ";
+         aux = aux->next;
+    }while(aux != l->first);
+    
+    
+    cout << endl;
+}
 
 /* Retorna se a lista está vazia */
-bool isEmpty(ListaDE* l)
+bool isEmpty(ListaDEC* l)
 {
-    return (l->back == NULL && l->front == NULL);
+    return (l->first == NULL);
 }
 
 /* Retorna se a lista está cheia */
-bool isFull(ListaDE* l)
+bool isFull(ListaDEC* l)
 {
     //Cria um novo node;
     try{
@@ -87,7 +114,9 @@ bool isFull(ListaDE* l)
     }
 }
 
+
 /* Add items to the end of an list */
+/*
 void push(ListaDE*& l, ItemType v)
 {
     //Cria um novo node;
@@ -114,8 +143,10 @@ void push(ListaDE*& l, ItemType v)
         l->front = newnode;
     
 }
+*/
 
 /* Add items to the beginning of an array */
+/*
 void unshift(ListaDE*& l, ItemType v)
 {
     if (isFull(l))
@@ -137,8 +168,10 @@ void unshift(ListaDE*& l, ItemType v)
 
     l->front = newnode;
 }
+*/
 
 /* Remove an item from the beginning of an array.*/
+/*
 ItemType shift(ListaDE*& l)
 {
 
@@ -168,8 +201,10 @@ ItemType shift(ListaDE*& l)
     
 
 }
+*/
 
 /* Remove an item from the end of an list */
+/*
 ItemType pop(ListaDE*& l)
 {
     if (!isEmpty(l))
@@ -200,9 +235,11 @@ ItemType pop(ListaDE*& l)
         return false;
     }
 }
+*/
 
 /* Procura o valor v na lista e caso encontre retorna o noded
 caso contrario retorna o noded com null; */
+/*
 NodeD* findValue(ListaDE* l, ItemType v)
 {
     for (NodeD* aux = l->front; aux != NULL; aux = aux->next)
@@ -214,9 +251,11 @@ NodeD* findValue(ListaDE* l, ItemType v)
     NodeD* r = NULL;
     return r;
 }
+*/
 
 /* Insere um noded após outro noded */
-void insertAfter(ListaDE*& l, NodeD* n, ItemType v)
+/*
+void insertAfter(ListaDEC*& l, NodeD* n, ItemType v)
 {
     if (isFull(l))
     {
@@ -242,8 +281,10 @@ void insertAfter(ListaDE*& l, NodeD* n, ItemType v)
     if (newnode->next)
         newnode->next->prev = newnode;
 }
+*/
 
 /* Insere um noded antes outro noded */
+/*
 void insertBefore(ListaDE*& l, NodeD* n, ItemType v)
 {
     if (isFull(l))
@@ -270,91 +311,136 @@ void insertBefore(ListaDE*& l, NodeD* n, ItemType v)
         l->front = newnode;
     
 }
+*/
+
+
+
+
+
+/*Funçõe para a Lista Duplamente Encadeada Circular*/
+
+/*insert, insere um valor na lista após o node first da lista*/
+void insert(ListaDEC*& l,  ItemType v)
+{
+    
+    if (isFull(l))
+    {
+        cout << "Memoria cheia" << endl;
+        return;
+    }
+    
+    // checar o primeiro elemento
+    if (l->first == NULL)
+    {
+        NodeD* newnode = new NodeD;
+        newnode->v = v;
+        
+        // ajusta os ponteiros
+        newnode->next = newnode;
+        newnode->prev = newnode;
+        
+        l->first = newnode;
+    }
+    else
+    {
+        NodeD* newnode = new NodeD;
+        newnode->v = v;
+        
+        newnode->next = l->first->next;
+        l->first->next = newnode;
+        
+        newnode->next->prev = newnode;
+        
+        newnode->prev = l->first;
+        
+        
+    }
+    
+    
+}
+
+
+/*Buscar um valor na lista e retorna uma NodeD*/
+NodeD* buscarValor(ListaDEC* l, ItemType v)
+{
+    NodeD* result = NULL;
+    
+    NodeD* aux = l->first;
+    
+    do{
+        if(aux->v == v)
+        {
+            result = aux;
+        }
+         aux = aux->next;
+    }while(aux != l->first);
+    
+    
+    return result;
+}
+
+/*Atualizar um valor da lista*/
+NodeD* atualizarValor(ListaDEC*& l, ItemType v, ItemType a)
+{
+    NodeD* result = buscarValor(l, v);
+    
+    if(result)
+    {
+        result->v = a;
+    }
+    return result;
+}
+
+bool removeValor(ListaDEC*& l, ItemType v)
+{
+    
+    NodeD* result = buscarValor(l, v);
+    
+    if (!result)
+    {
+        return false;
+    }
+    
+    
+    
+    // remoção do elemento da ponta direita...    
+    if (result->next == l->first)
+    {
+        l->first->prev = result->prev;
+        result->prev->next = l->first;
+        return true;
+    }
+    
+    // remoção do elemento da ponta direita...
+    
+    
+    // caso de remoção de elemento ao meio
+    result->next->prev = result->prev;
+    result->prev->next = result->next;
+    
+    
+    delete result;
+    
+    return true;
+}
+
+
 
 int main()
 {
     ListaDEC* listaDEC = new ListaDEC;
     
-
-    //preenche de A - Z
-    for (short int i = 'A'; i <= 'Z'; i++)
-        push(listaDE, (char) i);
-
-    /* describeFtoB(listaDE); cout << endl;
-
-    /* procurar o G e inseri o 7 depois do G */
-    if (NodeD* found = findValue(listaDE, 'G'))
-        insertAfter(listaDE, found, '7');
-
-    /* procurar o Z e inserir o 9 depois do Z, realizando o ajuste nos ponteiros */
-    if (NodeD* found = findValue(listaDE, 'Z'))
-        insertAfter(listaDE, found, '9');
-
-    // insere o 5 no final
-    push(listaDE, '5');
-    describeFtoB(listaDE);cout << endl;
-
-    /* Remove os elementos da lista */
-    cout << "Pops: ";
-    while (!isEmpty(listaDE))
-        cout << pop(listaDE) << " ";
-    cout << endl;
-
-    describeFtoB(listaDE);
-    //verifica o ajuste dos ponteiros internos
-    cout << listaDE->back << endl;
-    cout << listaDE->front << endl << endl;
-
-    /* ------------------------------------------ */
-
-    /* Inserir no começo */
-    unshift(listaDE, '1');
-    unshift(listaDE, '3');
-    unshift(listaDE, '5');
-    unshift(listaDE, '6');
-    unshift(listaDE, '2');
-    describeFtoB(listaDE); cout << endl;
-
-    /* Remover no começo */
-    cout << "Pops: ";
-    while (!isEmpty(listaDE))
-        cout << shift(listaDE) << " ";
-    cout << endl;
-
-    describeFtoB(listaDE); cout << endl;
-
-    /* Inserir antes */
-
-    // preenche com unshift de Z - A;
-    for (short int i = 'Z'; i >= 'A' ; i--)
-        unshift(listaDE, (char) i);
-
-    describeFtoB(listaDE); cout << endl;
-
-    /* procurar o G e inserir o 7 antes do G */
-    if (NodeD* found = findValue(listaDE, 'G'))
-        insertBefore(listaDE, found, '7');
-
-    /* procurar o A e inserir o 3 antes do A */
-    if (NodeD* found = findValue(listaDE, 'A'))
-        insertBefore(listaDE, found, '3');
-
-    // insere o 5 no inicio
-    unshift(listaDE, '5');
-    describeFtoB(listaDE); cout << endl;
-
-    /* Remover no começo  */
-    cout << "Pops: ";
-    while (!isEmpty(listaDE))
-        cout << shift(listaDE) << " ";
-    cout << endl;
-    describeFtoB(listaDE);
-
-    //verifica o ajuste dos ponteiros internos
-    cout << listaDE->back << endl;
-    cout << listaDE->front << endl << endl;
-
+    insert(listaDEC, 'A');
+    insert(listaDEC, 'B');
+    insert(listaDEC, 'C');
     
-    delete listaDE;
+    cout << removeValor(listaDEC, 'B') << endl;
+    
+    describeAll(listaDEC);
+    
+    
+    
+
+    delete listaDEC;
     return 0;
 }
