@@ -4,12 +4,7 @@ using namespace std;
 #define OS 'windows' // windows , linux
 
 /* 
-    Lista duplamente encadeada circular inspirada nos operações em Js.
-    Pop, Push, Shift and Unshift Array Methods in JavaScript
-    push(): Add items to the end of an array.
-    pop(): Remove an item from the end of an array.
-    unshift(): Add items to the beginning of an array.
-    shift(): Remove an item from the beginning of an array.
+    Lista duplamente encadeada circular.
 
     Autor: Kevin R.
 */
@@ -129,10 +124,7 @@ void insert(ListaDEC*& l,  ItemType v)
         
         newnode->prev = l->first;
         
-        
     }
-    
-    
 }
 
 
