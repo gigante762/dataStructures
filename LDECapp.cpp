@@ -1,19 +1,18 @@
 #include <iostream>
+#include <cstring>
 using namespace std;
 
-#define OS 'windows' // windows , linux
+#define SISTEMA "linux" // windows , linux
 
 /* 
     Lista duplamente encadeada circular aplicada a um crud.
 
-    Cadastro simples de cursos
+    Cadastro simples cursos para um escola de cursos.
     
     curso: {
         string nome PK... -- pois é
         int duracao(meses) -- tempo do curso
         desc string -- descrição
-
-        preRequisito: curso;
     }
 
     Autor: Kevin R.
@@ -46,7 +45,6 @@ struct Curso{
     int duracao = 0;
     string desc;
 };
-
 
 
 //Node duplamente encadeado
@@ -233,12 +231,167 @@ bool removeValor(ListaDEC*& l, string nomeCurso)
 }
 
 
+/* Funções para o projeto */
+
+/* Exibe um menu com opções */
+void printOpcoes()
+{
+    cout << "1- Criar Curso" << endl;
+    cout << "2- Ver Cursos" << endl;
+    //cout << "2- Ver Cursos" << endl;
+}
+
+/* Limpra o terminal com base no sistem operacional */
+void cls()
+{
+    if ( strcmp(SISTEMA, "linux") == 0)
+        system("cls");
+    else
+        system("lmp");
+}
+
+int menu()
+{
+    short int op;
+    cout << "==== Bem vindo a sua escola de cursos ==== \n";
+    cout << "Escolha uma opcao: \n";
+    printOpcoes();
+    cout << "> ";
+    cin >> op;
+    cout << "==== ----------------------- ==== \n";
+
+    return op;
+}
+
+/* Verifica se um numero esta entre um minimo e maximo */
+bool checkeBetween(int val, int min, int max)
+{
+    return (val >= min && val <= max);
+}
+
+void criarNovoCurso(ListaDEC*& l)
+{
+    cout << "Nome do curso: ";
+    string tmpName;
+    cin.ignore();
+    getline(cin, tmpName);
+
+    cout << "Duracao em meses do curso: ";
+    //cin.ignore();
+    int tmpDuracao;
+    cin >> tmpDuracao;
+
+    cout << "Descricao do cuso: ";
+    string tmpDesc;
+    cin.ignore();
+    getline(cin, tmpDesc);
+
+    //cria o curso
+    Curso c;
+    c.nome = tmpName;
+    c.duracao = tmpDuracao;
+    c.desc = tmpDesc;
+
+    //insere na listaDEC
+    insert(l, c);
+
+}
+
+
+/*Mostra todos os cursos*/
+void verTodosCursos(ListaDEC*& l)
+{
+    if (l->first == NULL)
+    {
+        cout << "nao ha cursos\n";
+        return;
+    }
+
+    NodeD* aux = l->first;
+
+    // t é o titulo do primeiro curso
+    string t = aux->c.nome;
+
+    cout << "Nome do curso: " << aux->c.nome << endl;
+    cout << "\tDuracao: " << aux->c.duracao << " meses"<< endl;
+    cout << "\tDescicao: " << aux->c.desc << endl;
+    cout << "---------"  << endl;
+
+    aux = aux->next;
+
+    while(aux->c.nome.compare(t) != 0)
+    {
+        cout << "Nome do curso: " << aux->c.nome << endl;
+        cout << "\tDuracao: " << aux->c.duracao << " meses"<< endl;
+        cout << "\tDescicao: " << aux->c.desc << endl;
+        cout << "---------"  << endl;
+
+        aux = aux->next;
+    }
+
+    
+    
+}
+
+/* Carrega alguns dados já prontos */
+void montarCenarioTest(ListaDEC*& l)
+{
+    Curso a;
+    a.nome = "Calculo 1";
+    a.duracao = 4;
+    a.desc = "Calculo 1 descricao";
+
+    insert(l, a);
+
+    Curso b;
+    b.nome = "Calculo 2";
+    b.duracao = 6;
+    b.desc = "Calculo 2 descricao";
+
+    insert(l, b);
+
+}
+
 
 int main()
 {
-
     // Criação da lista
     ListaDEC* listaDEC = new ListaDEC;
+
+    char garbage;      // Para segurar o continue do menu
+    montarCenarioTest(listaDEC);
+
+    while (true)
+    {
+        cls();
+        int opMenu = menu();
+
+        while (!checkeBetween(opMenu, 1, 2))
+        {
+            cls();
+            cout << "Valores invalidos...\n";
+            opMenu = menu();
+        }
+
+        cls();
+       
+       if (opMenu == 1)
+       {
+           criarNovoCurso(listaDEC);
+       }else if (opMenu == 2)
+       {
+           //quero que mostre de 2 em 2 e vá passando com as teclas 'a' 'd'
+           verTodosCursos(listaDEC);
+       }
+
+    cout << "\nDigite 'a' + Enter para continuar ";
+    cin >> garbage;
+
+        
+       
+
+
+    }
 
 
     
