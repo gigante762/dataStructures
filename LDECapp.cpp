@@ -4,7 +4,17 @@ using namespace std;
 #define OS 'windows' // windows , linux
 
 /* 
-    Lista duplamente encadeada circular.
+    Lista duplamente encadeada circular aplicada a um crud.
+
+    Cadastro simples de cursos
+    
+    curso: {
+        string nome PK... -- pois é
+        int duracao(meses) -- tempo do curso
+        desc string -- descrição
+
+        preRequisito: curso;
+    }
 
     Autor: Kevin R.
 */
@@ -12,30 +22,36 @@ using namespace std;
 /* 
 
     Check list de desenvolvimento. Em ordem de prioridade.
- 
-    ---- Operações da lista ----
-    Inserir valores na lista ok
-    Inserir mais de uma valor na lista, 1 2 3 ... ok
-    
-    Buscar um valor na list -> encontrar; ok
-    Buscar um valor na list -> retornar; ok
-        Atualizar um valor da lista ok
-        
-    Remover um valor da lista ok
-    Remover todos os valores da lista ok
-    --------
 
     ----- Projeto ----- 
+
+    Adicionar novo curso
+    exibir todos os cursos
+    pesquisar por cursos
+    navegar por cursos
+    editar cursos
+    remover cursos {
+        checar integridade referencial...
+    }
+
+
+
     
     ---------
 
 */
 
-typedef char ItemType;
+struct Curso{
+    string nome;
+    int duracao = 0;
+    string desc;
+};
+
+
 
 //Node duplamente encadeado
 struct NodeD{
-    ItemType v;
+    Curso c;
     NodeD* prev = NULL;
     NodeD* next = NULL;
 };
@@ -59,7 +75,7 @@ void describeAll(ListaDEC* l)
     NodeD* aux = l->first;
     
     do{
-         cout << aux->v << " ";
+         cout << aux->c.nome << " ";
          aux = aux->next;
     }while(aux != l->first);
     
@@ -91,7 +107,7 @@ bool isFull(ListaDEC* l)
 /*Funçõe para a Lista Duplamente Encadeada Circular*/
 
 /*insert, insere um valor na lista após o node first da lista*/
-void insert(ListaDEC*& l,  ItemType v)
+void insert(ListaDEC*& l,  Curso c)
 {
     
     if (isFull(l))
@@ -104,7 +120,7 @@ void insert(ListaDEC*& l,  ItemType v)
     if (l->first == NULL)
     {
         NodeD* newnode = new NodeD;
-        newnode->v = v;
+        newnode->c = c;
         
         // ajusta os ponteiros
         newnode->next = newnode;
@@ -115,7 +131,7 @@ void insert(ListaDEC*& l,  ItemType v)
     else
     {
         NodeD* newnode = new NodeD;
-        newnode->v = v;
+        newnode->c = c;
         
         newnode->next = l->first->next;
         l->first->next = newnode;
@@ -127,9 +143,8 @@ void insert(ListaDEC*& l,  ItemType v)
     }
 }
 
-
 /*Buscar um valor na lista e retorna uma NodeD*/
-NodeD* buscarValor(ListaDEC* l, ItemType v)
+NodeD* buscarValor(ListaDEC* l, string nomeCurso)
 {
     NodeD* result = NULL;
 
@@ -139,9 +154,9 @@ NodeD* buscarValor(ListaDEC* l, ItemType v)
     }
     
     NodeD* aux = l->first;
-    
+
     do{
-        if(aux->v == v)
+        if(aux->c.nome.compare(nomeCurso) == 0)
         {
             result = aux;
         }
@@ -151,25 +166,27 @@ NodeD* buscarValor(ListaDEC* l, ItemType v)
     return result;
 }
 
-/*Atualizar um valor da lista*/
-NodeD* atualizarValor(ListaDEC*& l, ItemType v, ItemType a)
+/*Atualiza um curso com base no nome do curso, passa o nome do curso a ser atualizado e um curso com os novos dados.*/
+NodeD* atualizarValor(ListaDEC*& l, string nomeCurso, Curso cursoAtualizado)
 {
-    NodeD* result = buscarValor(l, v);
+    NodeD* result = buscarValor(l, nomeCurso);
     
     if(result)
     {
-        result->v = a;
+        result->c.nome = cursoAtualizado.nome;
+        result->c.duracao = cursoAtualizado.duracao;
+        result->c.desc = cursoAtualizado.desc;
     }
     return result;
 }
 
-bool removeValor(ListaDEC*& l, ItemType v)
+bool removeValor(ListaDEC*& l, string nomeCurso)
 {
-    NodeD* result = buscarValor(l, v);
+    NodeD* result = buscarValor(l, nomeCurso);
 
     if (!result)
     {
-        cout << "Valor '" << v << "' nao localizado para remocao\n";
+        cout << "Curso '" << nomeCurso << "' nao localizado para remocao\n";
         return false;
     }
     
@@ -201,7 +218,7 @@ bool removeValor(ListaDEC*& l, ItemType v)
 
             // como agora ele não é o first pode chamar o método novamente para cuidar
             // dessa remoção, ou será meio ou direita;
-            return removeValor(l, v);
+            return removeValor(l, nomeCurso);
         }
     }
 
@@ -219,19 +236,13 @@ bool removeValor(ListaDEC*& l, ItemType v)
 
 int main()
 {
+
+    // Criação da lista
     ListaDEC* listaDEC = new ListaDEC;
-    
-    describeAll(listaDEC);
-    insert(listaDEC, 'A');
-    insert(listaDEC, 'B');
-    insert(listaDEC, 'C');
+
 
     
-    describeAll(listaDEC);
-    cout << removeValor(listaDEC, 'B') << endl;
-    describeAll(listaDEC);
-   
-    
+
    
     //fim do programa, vai liberar toda a memória
     delete listaDEC;
