@@ -113,13 +113,17 @@ void insert(ListaDEC*& l,  Curso c)
         cout << "Memoria cheia" << endl;
         return;
     }
-    
+
+    NodeD* newnode = new NodeD;
+    //copias os valores
+    newnode->c.nome = c.nome;
+    newnode->c.duracao = c.duracao;
+    newnode->c.desc = c.desc;
+
+
     // checar o primeiro elemento
     if (l->first == NULL)
     {
-        NodeD* newnode = new NodeD;
-        newnode->c = c;
-        
         // ajusta os ponteiros
         newnode->next = newnode;
         newnode->prev = newnode;
@@ -128,9 +132,6 @@ void insert(ListaDEC*& l,  Curso c)
     }
     else
     {
-        NodeD* newnode = new NodeD;
-        newnode->c = c;
-        
         newnode->next = l->first->next;
         l->first->next = newnode;
         
@@ -237,7 +238,8 @@ bool removeValor(ListaDEC*& l, string nomeCurso)
 void printOpcoes()
 {
     cout << "1- Criar Curso" << endl;
-    cout << "2- Ver Cursos" << endl;
+    cout << "2- Ver todos os cursos" << endl;
+    cout << "3- Navegas pelos cursos" << endl;
     //cout << "2- Ver Cursos" << endl;
 }
 
@@ -303,7 +305,41 @@ void verTodosCursos(ListaDEC*& l)
 {
     if (l->first == NULL)
     {
-        cout << "nao ha cursos\n";
+        cout << "Nao ha cursos\n";
+        return;
+    }
+
+    int contador = 1;
+
+    NodeD* aux = l->first;
+
+    // t é o titulo do primeiro curso
+    string t = aux->c.nome;
+
+    cout << "Cursos:\n";
+
+    cout << contador << ") "<<   aux->c.nome << endl;
+    
+
+    aux = aux->next;
+    contador++;
+
+    while(aux->c.nome.compare(t) != 0)
+    {
+       cout << contador << ") "<<   aux->c.nome << endl;
+
+        aux = aux->next;
+        contador++;
+    }
+    
+}
+
+/*Mostra todos os cursos*/
+void navegarEntreCursos(ListaDEC*& l)
+{
+    if (l->first == NULL)
+    {
+        cout << "Nao ha cursos\n";
         return;
     }
 
@@ -336,19 +372,23 @@ void verTodosCursos(ListaDEC*& l)
 /* Carrega alguns dados já prontos */
 void montarCenarioTest(ListaDEC*& l)
 {
-    Curso a;
-    a.nome = "Calculo 1";
-    a.duracao = 4;
-    a.desc = "Calculo 1 descricao";
 
-    insert(l, a);
+        Curso a;
+        a.nome = "Calculo 1";
+        a.duracao = 2;
+        a.desc = "Descicao Calculo 1";
 
-    Curso b;
-    b.nome = "Calculo 2";
-    b.duracao = 6;
-    b.desc = "Calculo 2 descricao";
+        insert(l, a);
 
-    insert(l, b);
+        a.nome = "Calculo 2";
+        a.duracao = 4;
+        a.desc = "Descicao Calculo 2";
+        insert(l, a);
+
+        a.nome = "Calculo 3";
+        a.duracao = 1;
+        a.desc = "Descicao Calculo 3";
+        insert(l, a);
 
 }
 
@@ -366,7 +406,7 @@ int main()
         cls();
         int opMenu = menu();
 
-        while (!checkeBetween(opMenu, 1, 2))
+        while (!checkeBetween(opMenu, 1, 3))
         {
             cls();
             cout << "Valores invalidos...\n";
@@ -378,10 +418,16 @@ int main()
        if (opMenu == 1)
        {
            criarNovoCurso(listaDEC);
-       }else if (opMenu == 2)
+       }
+       else if (opMenu == 2)
        {
-           //quero que mostre de 2 em 2 e vá passando com as teclas 'a' 'd'
+           // mostra o titulo de todos os cursos
            verTodosCursos(listaDEC);
+       }
+       else if (opMenu == 3)
+       {
+           //passa os cursos um a um.
+           navegarEntreCursos(listaDEC);
        }
 
     cout << "\nDigite 'a' + Enter para continuar ";
