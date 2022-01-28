@@ -5,9 +5,9 @@ using namespace std;
 #define SISTEMA "linux" // windows , linux
 
 /* 
-    Lista duplamente encadeada circular aplicada a um crud.
-
-    Cadastro simples cursos para um escola de cursos.
+    Lista duplamente encadeada circular aplicada a um crud de cursos para Facu.
+    Cadastro de cursos para um escola de cursos.
+    Tendo como bônus um ordenação da lista em ordem alfabética.
     
     curso: {
         string nome PK... -- pois é
@@ -16,20 +16,6 @@ using namespace std;
     }
 
     Autor: Kevin R.
-*/
-
-/* 
-
-    Check list de desenvolvimento. Em ordem de prioridade.
-
-    ----- Projeto ----- 
-    Adicionar novo curso
-    exibir todos os cursos
-    navegar por cursos
-    editar cursos
-    remover cursos 
-    ---------
-
 */
 
 struct Curso{
@@ -133,7 +119,6 @@ void insert(ListaDEC*& l,  Curso c)
         
     }
 }
-
 
 /*Buscar um valor na lista e retorna uma NodeD*/
 NodeD* buscarValor(ListaDEC* l, string nomeCurso)
@@ -468,12 +453,13 @@ void montarCenarioTest(ListaDEC*& l)
         insert(l, a);
 }
 
-/* Metodo de ordenação buble sort para ordenar a lista */
+/* Metodo de ordenação buble sort para ordenar a lista O(n²) */
 void ordenarLista(ListaDEC*& l)
 {
     // null ou verifica se tem apenas um valor
     if (l->first == NULL || l->first == l->first->next)
     {
+        cout << "Lista ordenada com sucesso!\n";
         return;
     }
 
@@ -597,7 +583,6 @@ int main()
 
     }
 
-   
     //fim do programa, vai liberar toda a memória
     delete listaDEC;
     return 0;
