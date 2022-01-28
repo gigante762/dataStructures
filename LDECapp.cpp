@@ -23,14 +23,11 @@ using namespace std;
     Check list de desenvolvimento. Em ordem de prioridade.
 
     ----- Projeto ----- 
-
     Adicionar novo curso
     exibir todos os cursos
-    pesquisar por cursos -- 
     navegar por cursos
     editar cursos
     remover cursos 
-
     ---------
 
 */
@@ -137,6 +134,7 @@ void insert(ListaDEC*& l,  Curso c)
     }
 }
 
+
 /*Buscar um valor na lista e retorna uma NodeD*/
 NodeD* buscarValor(ListaDEC* l, string nomeCurso)
 {
@@ -235,7 +233,8 @@ void printOpcoes()
     cout << "1- Criar Curso" << endl;
     cout << "2- Ver todos os cursos" << endl;
     cout << "3- Navegas pelos cursos" << endl;
-    cout << "4- Sair do programa" << endl;
+    cout << "4- Ordenar cursos em ordem alfabetica" << endl;
+    cout << "0- Sair do programa" << endl;
    
 }
 
@@ -452,7 +451,100 @@ void montarCenarioTest(ListaDEC*& l)
         a.duracao = 1;
         a.desc = "Ponteiros, Complexidade, Listas encadeadas ...";
         insert(l, a);
+
+        a.nome = "Organizacao da Educacao";
+        a.duracao = 3;
+        a.desc = "Historia da Educacao, pensadores, leis e diretrizes...";
+        insert(l, a);
+
+        a.nome = "Oficina de Leitura e Escrita";
+        a.duracao = 3;
+        a.desc = "Leitura, criatividade, construcao do saber...";
+        insert(l, a);
+
+        a.nome = "Introducao a computacao";
+        a.duracao = 3;
+        a.desc = "Ordenacao, atividades desplugadas, areas de atuacao...";
+        insert(l, a);
 }
+
+/* Metodo de ordenação buble sort para ordenar a lista */
+void ordenarLista(ListaDEC*& l)
+{
+    // null ou verifica se tem apenas um valor
+    if (l->first == NULL || l->first == l->first->next)
+    {
+        return;
+    }
+
+    //faz o aux ser o first
+    NodeD* aux = l->first;
+
+    /*  Cara fiquei uma meio hora pra achar o bug kkkkk
+        Pelo fato de ser circular vai dar isso [1,2,3...9], quando for
+        varrer novamente vai ter a comparação 9 1 e isso gera um swap dai fica infinito! kkkk
+        Uma maneira é setar o ponto de partida tendo o menor valor como o first, afinal
+        ela é circular o first não faz diferença de quem é. Sendo assim eu consido ordenar
+        e quando chegar ao fim eu rodo novamente garantindo que first(o menor), nunca passará
+        pelo swap, quebrando o loop infinito.
+    */
+
+    // vou pegar o menor valor da lista para ser o meu ponto de partida;
+
+    NodeD* nodeMenorValor = l->first;
+    for(NodeD* auxI = l->first; auxI->next != l->first; auxI = auxI->next )
+    {
+        if(auxI->c.nome < nodeMenorValor->c.nome)
+        {
+            nodeMenorValor = auxI;
+        }
+    }
+
+    //cout << "Node de menor valor " << nodeMenorValor->c.nome << endl;
+    l->first = nodeMenorValor;
+
+    //repete enquanto nao der uma volta ou seja aux != l->first
+
+    // considere toda lista ordenada até que se prove o contrário.
+    bool isOrdened = true;
+    aux = l->first;
+    do {
+        isOrdened = true;
+        while(aux->next != l->first)
+        {
+            bool needSpaw = aux->c.nome > aux->next->c.nome;
+            isOrdened = isOrdened && !needSpaw;
+            if(needSpaw)
+            {
+                //cout << "Trocando " << aux->c.nome << " por " << aux->next->c.nome << endl;
+                isOrdened = false;
+
+                //swap, a e b pra facilitar o pensamento kkk
+                NodeD* a = aux;
+                NodeD* b = aux->next;
+
+                a->next = b->next;
+                b->prev = a->prev;
+                a->prev = b;
+                b->next = a;
+                a->next->prev = a;
+                b->prev->next = b;
+            }
+
+            aux = aux->next;
+        }
+
+        // reseta o aux para o primeiro
+        aux = l->first;
+       
+
+    } while(!isOrdened);
+
+
+    /*putz grila!! tô muito feliz !!!! funcionou!!! Com orgulho eu digo*/
+    cout << "Lista ordenada com sucesso!\n";
+}
+
 
 
 int main()
@@ -468,7 +560,7 @@ int main()
         cls();
         int opMenu = menu();
 
-        while (!checkeBetween(opMenu, 1, 4))
+        while (!checkeBetween(opMenu, 0, 4))
         {
             cls();
             cout << "Valores invalidos...\n";
@@ -492,6 +584,10 @@ int main()
            navegarEntreCursos(listaDEC);
        }
        else if (opMenu == 4)
+       {
+           ordenarLista(listaDEC);
+       }
+       else if (opMenu == 0)
        {
            return 0;
        }
