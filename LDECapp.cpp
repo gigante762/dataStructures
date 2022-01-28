@@ -26,16 +26,11 @@ using namespace std;
 
     Adicionar novo curso
     exibir todos os cursos
-    pesquisar por cursos
+    pesquisar por cursos -- 
     navegar por cursos
     editar cursos
-    remover cursos {
-        checar integridade referencial...
-    }
+    remover cursos 
 
-
-
-    
     ---------
 
 */
@@ -240,7 +235,8 @@ void printOpcoes()
     cout << "1- Criar Curso" << endl;
     cout << "2- Ver todos os cursos" << endl;
     cout << "3- Navegas pelos cursos" << endl;
-    //cout << "2- Ver Cursos" << endl;
+    cout << "4- Sair do programa" << endl;
+   
 }
 
 /* Limpra o terminal com base no sistem operacional */
@@ -251,6 +247,7 @@ void cls()
     else
         system("lmp");
 }
+
 
 int menu()
 {
@@ -271,8 +268,10 @@ bool checkeBetween(int val, int min, int max)
     return (val >= min && val <= max);
 }
 
-void criarNovoCurso(ListaDEC*& l)
-{
+/* Retonar faz as perguntas e retorna um curso com base nas respostas, usado no insert e edit */
+Curso colherDadosDoCurso(){
+    
+    
     cout << "Nome do curso: ";
     string tmpName;
     cin.ignore();
@@ -294,6 +293,16 @@ void criarNovoCurso(ListaDEC*& l)
     c.duracao = tmpDuracao;
     c.desc = tmpDesc;
 
+    return c;
+
+
+}
+
+void criarNovoCurso(ListaDEC*& l)
+{
+    //cria o curso
+    Curso c = colherDadosDoCurso();
+   
     //insere na listaDEC
     insert(l, c);
 
@@ -320,7 +329,6 @@ void verTodosCursos(ListaDEC*& l)
 
     cout << contador << ") "<<   aux->c.nome << endl;
     
-
     aux = aux->next;
     contador++;
 
@@ -337,11 +345,18 @@ void verTodosCursos(ListaDEC*& l)
 /*Mostra todos os cursos*/
 void navegarEntreCursos(ListaDEC*& l)
 {
+    string textoCabecalho =  "Use 'd' e 'a' para avancar e voltar. \nUse 'e' para editar o curso \nUse 'r' para remover um curso \nUse 'q' para sair\n\n";
+    /* Não consegui fazer um modo de apertar a,d e 
+    já enviar a opcao, o problema é que preciso apertar o enter. */
+
     if (l->first == NULL)
     {
         cout << "Nao ha cursos\n";
         return;
     }
+
+    cls();
+    cout << textoCabecalho;
 
     NodeD* aux = l->first;
 
@@ -353,43 +368,90 @@ void navegarEntreCursos(ListaDEC*& l)
     cout << "\tDescicao: " << aux->c.desc << endl;
     cout << "---------"  << endl;
 
-    aux = aux->next;
+    cin.ignore();
+    char opcao = cin.get();
 
-    while(aux->c.nome.compare(t) != 0)
+    cls();
+    cout << textoCabecalho;
+
+
+    while(opcao != 'q')
     {
-        cout << "Nome do curso: " << aux->c.nome << endl;
-        cout << "\tDuracao: " << aux->c.duracao << " meses"<< endl;
-        cout << "\tDescicao: " << aux->c.desc << endl;
-        cout << "---------"  << endl;
+        if (opcao == 'a')
+        {
+            aux = aux->prev;
+        }
+        else if (opcao == 'd')
+        {
+            aux = aux->next;
+        }
+        else if (opcao == 'r')
+        {
+            aux = aux->next;
+            removeValor(l,aux->prev->c.nome);
+        }
+        else if (opcao == 'e')
+        {
+            cout << "Atulizando curso '" << aux->c.nome << "'\n";
+            //atualizar curso
+            Curso cursoatt = colherDadosDoCurso();
+            
+            cursoatt.nome = (cursoatt.nome == "") ? aux->c.nome : cursoatt.nome;
+            cursoatt.desc = (cursoatt.desc == "") ? aux->c.desc : cursoatt.desc;
 
-        aux = aux->next;
+
+            cls();
+            cout << textoCabecalho;
+            atualizarValor(l, aux->c.nome, cursoatt);
+        }
+
+        if (l->first != NULL)
+        {
+            cout << "Nome do curso: " << aux->c.nome << endl;
+            cout << "\tDuracao: " << aux->c.duracao << " meses"<< endl;
+            cout << "\tDescicao: " << aux->c.desc << endl;
+            cout << "---------"  << endl;
+        }
+        // caso remova até o ultimo curso não há como navegar mais.
+        else
+        {
+            cout << "Nao ha cursos\n";
+            return;
+        }
+
+
+        //cin.ignore();
+        opcao = cin.get();
+
+        cls();
+        cout << textoCabecalho;
     }
 
-    
-    
 }
 
 /* Carrega alguns dados já prontos */
 void montarCenarioTest(ListaDEC*& l)
 {
-
         Curso a;
         a.nome = "Calculo 1";
         a.duracao = 2;
-        a.desc = "Descicao Calculo 1";
-
+        a.desc = "Limites e Derivadas";
         insert(l, a);
 
         a.nome = "Calculo 2";
         a.duracao = 4;
-        a.desc = "Descicao Calculo 2";
+        a.desc = "Derivadas e Integral";
         insert(l, a);
 
-        a.nome = "Calculo 3";
+        a.nome = "Algebra Linear";
         a.duracao = 1;
-        a.desc = "Descicao Calculo 3";
+        a.desc = "Matrizes, vetores, espacos, subespacos, bases e transformacoes";
         insert(l, a);
 
+        a.nome = "Estrutura de dados I";
+        a.duracao = 1;
+        a.desc = "Ponteiros, Complexidade, Listas encadeadas ...";
+        insert(l, a);
 }
 
 
@@ -406,7 +468,7 @@ int main()
         cls();
         int opMenu = menu();
 
-        while (!checkeBetween(opMenu, 1, 3))
+        while (!checkeBetween(opMenu, 1, 4))
         {
             cls();
             cout << "Valores invalidos...\n";
@@ -429,18 +491,15 @@ int main()
            //passa os cursos um a um.
            navegarEntreCursos(listaDEC);
        }
+       else if (opMenu == 4)
+       {
+           return 0;
+       }
 
-    cout << "\nDigite 'a' + Enter para continuar ";
-    cin >> garbage;
-
-        
-       
-
+        cout << "\nDigite 'a' + Enter para continuar ";
+        cin >> garbage;
 
     }
-
-
-    
 
    
     //fim do programa, vai liberar toda a memória
